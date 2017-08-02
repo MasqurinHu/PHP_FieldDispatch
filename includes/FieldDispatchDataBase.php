@@ -69,8 +69,8 @@ class dbData{
 	}
 
 	$data = new dbData($dbname,$dbhost,$dbuser,$dbpasswd);
-	if (!$data) {
-		echo "PHP Error: DB Open Fail!";
-	}
+	// if (!$data) {
+	// 	echo "PHP Error: DB Open Fail!";
+	// }
 	
  ?>
