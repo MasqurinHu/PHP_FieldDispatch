@@ -1,6 +1,6 @@
 <?php 
 	include "./includes/FieldDispatchDataBase.php";
-
+	include "./includes/decode.php";
 	/*
 	Test Command: 
 
@@ -12,20 +12,9 @@
 	}'
 
 	*/
-
-	//$inputJson = urldecode(file_get_contents("php://input"));
-	$inputJson = $_POST['FieldDispatch'];
-
-	$inputJson=str_replace('FieldDispatch=', '', $inputJson);
-
-	//		echo "Input:".$inputJson;
-
-		$inputArray=json_decode($inputJson, true);
 	
-	//		var_dump($inputArray);
-	
-		$deviceType = $inputArray['deviceType'];	//0 null 1 iOS 2 Android
-        $deviceToken = $inputArray['deviceToken'];
+	$deviceType = $inputArray['deviceType'];	//0 null 1 iOS 2 Android
+    $deviceToken = $inputArray['deviceToken'];
 
 	if($inputJson=="") {
 		$rtn = '{"result" : false,"errorCode":"ERR_NO_INPUT"}';
@@ -36,12 +25,14 @@
 	}else {
 
 		$table = '`MembershipList`';
-		$methord = 'max';
-		$column = '`id`';
+		// $methord = 'max';
+		// $column = '`id`';
 	
-		$data -> insert($table);
-		$num = $data -> selectFunc($methord,$column,$table);
-
+		// $data -> insert($table);
+		
+		// $num = $data -> selectFunc($methord,$column,$table);
+		$arr = $data -> insertAndReportId($table);
+		$num = $arr['LAST_INSERT_ID()'];
 		$table = 'MemberDeviceToken';
 		$dbcolumns = '`memberId`,`deviceType`,`deviceToken`';
 		// $deviceType = '1';	1.iOS	2.Android	3.other...
@@ -56,7 +47,16 @@
 		$dbValus = "$num,$type";
 		$data -> insert($table,$dbcolumns,$dbValus);
 
-		$rtn = '{"result" : true, "memberId" : '.$num.'}';
+		$rtn = '{"result" : true, "memberId" : '.$num.', "memberType" : '.$type.'}';
 	}
+	// $data -> insert($table);
+	// $nam = $data -> InsertId();
+	// $naa =  $nam['LAST_INSERT_ID()'];
+	$naa =  $nam['0'];
+	// echo $naa.'<br>';
+	foreach ($nam as $key => $value) {
+		// echo '我是key'.$key.'<br>'.'我是值'.$value.'<br>';
+	}
+	// $rtn = '{"result" : true, "memberId" : '.$naa.'}';
 	echo $rtn;
  ?>

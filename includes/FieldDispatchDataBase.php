@@ -3,9 +3,20 @@ include "class_config.php";
 
 class dbData{
 		var $db;
+
+		function InsertId(){
+			$this-> db-> query("insert into `MembershipList`() 
+				values()");
+			return $this-> db-> query("SELECT LAST_INSERT_ID()")->fetch();
+		}
+
 		function insert($datasheet,$dbcolumns = "",$dbValus = ""){
-			$this-> db-> query("insert into $datasheet($dbcolumns) 
-				values($dbValus)");
+			$this-> db-> query("insert into $datasheet($dbcolumns) values($dbValus)");
+		}
+
+		function insertAndReportId($table,$dbcolumns = "",$dbValus = ""){
+			$this-> db-> query("insert into $table($dbcolumns) values($dbValus)");
+			return $this-> db-> query("SELECT LAST_INSERT_ID()")->fetch();
 		}
 
 		function delete($datasheet,$dbcolumns,$dbValus){
@@ -28,7 +39,9 @@ class dbData{
 			// 	"gusetbook_photo/".$_GET["id"]
 			// 	);
 		}
-		//methord = sum avg count max min
+
+		
+
 		function  selectFunc($methord,$column,$table){
 			return $this-> db-> query("select $methord($column) from $table")->fetchColumn(0);
 		}
@@ -69,8 +82,6 @@ class dbData{
 	}
 
 	$data = new dbData($dbname,$dbhost,$dbuser,$dbpasswd);
-	// if (!$data) {
-	// 	echo "PHP Error: DB Open Fail!";
-	// }
+	
 	
  ?>
