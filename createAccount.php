@@ -17,6 +17,7 @@
 	"deviceType":"1",
 	"nickName":"Masqurin",
 	"password":"abcdefg,
+	"mail":"ABC@google.com",
 	"photo":"url://photo",
 	}'
 
@@ -30,6 +31,7 @@
 	$memberId = $inputArray['memberId'];
 	$deviceType = $inputArray['deviceType'];	//0 null 1 iOS 2 Android
     $deviceToken = $inputArray['deviceToken'];
+    $memberMail = $inputArray['memberMail'];
 
 	if($inputJson=="") {
 		$rtn = '{"result" : false,"errorCode":"ERR_NO_INPUT"}';
@@ -45,6 +47,8 @@
 		$rtn = '{"result" : false,"errorCode":"ERR_NO_memberAccount"}';
 	} elseif ($deviceToken == "") {
 		$rtn = '{"result" : false,"errorCode":"ERR_NO_DeviceToken"}';
+	} elseif ($memberMail == "") {
+		$rtn = '{"result" : false,"errorCode":"ERR_NO_memberMail"}';
 	} elseif ($deviceType == "") {
 		$rtn = '{"result" : false,"errorCode":"ERR_NO_deviceType"}';
 	} else {
@@ -99,22 +103,31 @@
 		$arr = $data -> insertAndReportId($table,$dbcolumns,$dbValus);
 		$MemberPhoto = $arr['LAST_INSERT_ID()'];
 
+		$table = 'MemberMail';
+		$dbcolumns = '`memberId`,`memberMail`';
+		// $nickName = 'Masqurin';
+		$dbValus = "$memberId,'$memberMail'";
+		$arr = $data -> insertAndReportId($table,$dbcolumns,$dbValus);
+		$MemberMail = $arr['LAST_INSERT_ID()'];
+
 		$result = 'true';
 		if ($memberId != "") {
 			
-		}elseif ($deviceTokenId != "") {
+		} elseif ($deviceTokenId != "") {
 			
-		}elseif ($MemberType != "") {
+		} elseif ($MemberType != "") {
 			
-		}elseif ($MemberAccount != "") {
+		} elseif ($MemberAccount != "") {
 			
-		}elseif ($MemberNickname != "") {
+		} elseif ($MemberNickname != "") {
 			
-		}elseif ($MemberPassword != "") {
+		} elseif ($MemberPassword != "") {
 			
-		}elseif ($MemberPhoto != "") {
+		} elseif ($MemberMail != "") {
 			
-		}else {
+		} elseif ($MemberPhoto != "") {
+			
+		} else {
 			$result = 'false';
 		}
 
@@ -125,6 +138,7 @@
 		"MemberNicknameId" : '.$MemberNickname.',
 		"MemberPasswordId" : '.$MemberPassword.',
 		"MemberPhotoId" : '.$MemberPhoto.', 
+		"MemberMail" : '.$MemberMail.',
 		"memberTypeId" : '.$MemberType.'}';
 		
 	}
