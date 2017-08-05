@@ -58,5 +58,7 @@
 		// echo '我是key'.$key.'<br>'.'我是值'.$value.'<br>';
 	}
 	// $rtn = '{"result" : true, "memberId" : '.$naa.'}';
+
+	//待完成 如果裝置曾經被註冊 且原帳號未綁定fb google fd 則將原帳號狀態變更為0 幽靈帳號
 	echo $rtn;
  ?>
