@@ -4,17 +4,12 @@ include "class_config.php";
 class dbData{
 		var $db;
 
-		function InsertId(){
-			$this-> db-> query("insert into `MembershipList`() 
-				values()");
-			return $this-> db-> query("SELECT LAST_INSERT_ID()")->fetch();
-		}
-
 		function insert($datasheet,$dbcolumns = "",$dbValus = ""){
 			$this-> db-> query("insert into $datasheet($dbcolumns) values($dbValus)");
 		}
 
 		function insertAndReportId($table,$dbcolumns = "",$dbValus = ""){
+			// echo "insert into $table($dbcolumns) values($dbValus)<br>";
 			$this-> db-> query("insert into $table($dbcolumns) values($dbValus)");
 			return $this-> db-> query("SELECT LAST_INSERT_ID()")->fetch();
 		}
@@ -24,11 +19,13 @@ class dbData{
 			// unlink("gusetbook_photo/".$_GET["id"]);
 		}
 
-		function update($datasheet,$dbcolumns,$dbValus,$wheredbcolumns,$wheredbValus){
-			$this-> db-> query("update $datasheet
+		function update($table,$dbcolumns,$dbValus,$wheredbcolumns,$wheredbValus){
+			// echo "update $table
+			// 	set $dbcolumns = $dbValus
+			// 	where $wheredbcolumns = $wheredbValus";
+			$this-> db-> query("update $table
 				set $dbcolumns = $dbValus
 				where $wheredbcolumns = $wheredbValus");
-
 
 			// $_POST["id"] = $_GET["id"];
 			// $this-> db-> prepare("update `guestbook`
@@ -40,18 +37,14 @@ class dbData{
 			// 	);
 		}
 
-		
-
-		function  selectFunc($methord,$column,$table){
-			return $this-> db-> query("select $methord($column) from $table")->fetchColumn(0);
+		function  selectFunc($column,$table,$condition,$methord = ""){
+			return $this-> db-> query("select $methord($column) from $table where $condition")->fetchColumn(0);
 		}
 
-		function selectLimit($a,$b){
+		function selectLastAdd($column,$table,$condition){
+			// echo "select $column from $table where $condition order by `createTime` desc<br>";
 			return $this-> db-> query("
-				select `guestbook`.*,`member`.`user`,`member`.`email` from 
-				`guestbook` inner join `member` 
-				on `guestbook`.`member_id`=`member`.`id`
-				order by `creat_time` desc limit $a,$b")->fetchAll();
+				select $column from $table where $condition order by `createTime` desc ")->fetchColumn(0);
 		}
 
 		// function selectAll(){
@@ -67,10 +60,6 @@ class dbData{
 				select `guestbook`.*,`member`.`user`,`member`.`email` from 
 				`guestbook` inner join `member` 
 				on `guestbook`.`member_id`=`member`.`id` where `guestbook`.`id` = '$id'")->fetch();
-		}
-
-		function pageItem(){
-			$_SESSION["pageItem"]=$_GET["item"];
 		}
 
 		function __construct($dbname,$dbhost,$dbuser,$dbpasswd){

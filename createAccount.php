@@ -33,6 +33,50 @@
     $deviceToken = $inputArray['deviceToken'];
     $memberMail = $inputArray['memberMail'];
 
+    //web測試給假資料
+    // $memberAccount = '115086560858057731121';
+    // $inputJson = 'a';
+    // $photo = 'none';
+    // $password = 'aaa';
+    // $nickName = '五加一';
+    // $memberSingInType = '2';
+    // $deviceToken = 'deviceToken';
+    // $memberMail = '4900056@gmail.com';
+    // $deviceType = '1';
+    //web測試給假資料^^
+
+    //檢查帳號「fb google fd」是否登入過 資料庫有帳號資料 就找出原本的memberID
+    if ($memberAccount != null) {
+    	//變數純數字OK 有文字就爆炸
+    	//$where = "`memberAccount`=.$memberAccount";
+    	$where = "`memberAccount`='$memberAccount'";
+    	$checkAccount = $data -> selectLastAdd('`memberId`','`MemberAccount`',$where);
+
+    	
+    	if ($checkAccount != null) {
+    		$memberId = $checkAccount;
+    		$checkAccount = true;
+    	}
+    }
+
+
+    //測試sql撈資料是否正常
+    // if ($chechkAccount == null) {
+    // 	$rtn = '{"result" : false,"errorCode":'.$memberAccount.'}';
+    		
+    // }else {
+    // 	$rtn = '{"result" : true,"errorCode":'.$chechkAccount.'}';
+    // }
+    //^^^^^^
+    
+    //web測試
+ //    $where = "`memberAccount`=".$memberAccount;
+ //    // echo $where."<br>";
+ //    $memberId = $data -> selectLastAdd('`memberId`','`MemberAccount`',$where);
+	// $rtn = '{"result" : true,"errorCode":'.$memberId.'}';
+	// exit();
+	//web測試
+
 	if($inputJson=="") {
 		$rtn = '{"result" : false,"errorCode":"ERR_NO_INPUT"}';
 	} elseif ($photo == "") {
@@ -51,11 +95,59 @@
 		$rtn = '{"result" : false,"errorCode":"ERR_NO_memberMail"}';
 	} elseif ($deviceType == "") {
 		$rtn = '{"result" : false,"errorCode":"ERR_NO_deviceType"}';
+	} elseif ($checkAccount == true) {
+
+		$table = 'MemberDeviceToken';
+		$data -> update($table,'`status`','0','`status`',"1 and `memberId` = $memberId");
+		$dbcolumns = '`memberId`,`deviceType`,`deviceToken`';
+		// $deviceType = '1';	1.iOS	2.Android	3.other...
+		// $deviceToken = "'aaa-bbb-ccc'";
+		$dbValus = "$memberId,$deviceType,'$deviceToken'";
+		$arr = $data -> insertAndReportId($table,$dbcolumns,$dbValus);
+		$deviceTokenId = $arr['LAST_INSERT_ID()'];
+
+		$where = "`memberId`='$memberId'";
+    	$nickName = $data -> selectLastAdd('`nickName`','`MemberNickname`',$where);
+    	if ($nickName == null) {
+    		$nickName = "none";
+    	}
+
+    	$memberType = $data -> selectLastAdd('`memberType`','`MemberType`',$where);
+    	if ($memberType == null) {
+    		$memberType = "none";
+    	}
+
+    	$photo = $data -> selectLastAdd('`photo`','`MemberPhoto`',$where);
+    	if ($photo == null) {
+    		$photo = "none";
+    	}
+
+    	$memberMail = $data -> selectLastAdd('`memberMail`','`MemberMail`',$where);
+    	if ($memberMail == null) {
+    		$memberMail = "none";
+    	}
+
+    	$memberTel = $data -> selectLastAdd('`memberTel`','`MemberTel`',$where);
+    	if ($memberTel == null) {
+    		$memberTel = "none";
+    	}
+
+		$rtn = '{"result" : '.$checkAccount.',
+		"memberId":'.$memberId.',
+		"deviceToken":'.$deviceTokenId.',
+		"memberType":'.$memberType.',
+		"nickName":"'.$nickName.'",
+		"photo":"'.$photo.'",
+		"memberTel":"'.$memberTel.'",
+		"memberMail":"'.$memberMail.'"}';
 	} else {
-		if ($memberId == "0") {
+
+		if ($memberId == "0" || $memberId == "") {
+
 			$table = '`MembershipList`';
 			$arr = $data -> insertAndReportId($table);
 			$memberId = $arr['LAST_INSERT_ID()'];
+
 		}
 
 		$table = 'MemberDeviceToken';
