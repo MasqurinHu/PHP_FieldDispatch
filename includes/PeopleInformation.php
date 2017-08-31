@@ -71,10 +71,9 @@
 	//如果加入好友功能 這邊加入好友資訊跟群組成員過濾
 
 
-
 	//echo用 取得所有成員「不重複」 暱稱 電話 頭像 階級
 	$groupMemberInfo = array();
-	for ($i = 0; $i < count($allGroupMemberId)-1; $i++) {
+	for ($i = 0; $i < count($allGroupMemberId); $i++) {
 		$memberInfo = array();
 		$memberInfo['id'] = $allGroupMemberId[$i];
 		$nickName = $data -> getList('`nickName`','`MemberNickname`',"`memberId` = ".$allGroupMemberId[$i]);
