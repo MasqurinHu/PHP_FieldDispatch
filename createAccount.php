@@ -23,26 +23,16 @@
 
 	*/
 
-	$memberAccount = $inputArray['memberAccount'];
-	$memberSingInType = $inputArray['memberSingInType'];
-	$nickName = $inputArray['nickName'];
-	$password = $inputArray['password'];
-	$photo = $inputArray['photo'];
-	$memberId = $inputArray['memberId'];
-	$deviceType = $inputArray['deviceType'];	//0 null 1 iOS 2 Android
-    $deviceToken = $inputArray['deviceToken'];
-    $memberMail = $inputArray['memberMail'];
-
     //web測試給假資料
-    // $memberAccount = '115086560858057731121';
+    // $memberAccount = 'FieldDispatch';
     // $inputJson = 'a';
-    // $photo = 'none';
-    // $password = 'aaa';
-    // $nickName = '五加一';
-    // $memberSingInType = '2';
+    // $photo = 'https://masqurin.000webhostapp.com/FieldDispatch/pen.jpg';
+    // $password = 'test';
+    // $nickName = 'testMember';
+    // $memberSingInType = '3';
     // $deviceToken = 'deviceToken';
-    // $memberMail = '4900056@gmail.com';
-    // $deviceType = '1';
+    // $memberMail = 'test@icloud.com';
+    // $deviceType = '2';
     //web測試給假資料^^
 
     //檢查帳號「fb google fd」是否登入過 資料庫有帳號資料 就找出原本的memberID
@@ -70,11 +60,15 @@
     //^^^^^^
     
     //web測試
- //    $where = "`memberAccount`=".$memberAccount;
- //    // echo $where."<br>";
- //    $memberId = $data -> selectLastAdd('`memberId`','`MemberAccount`',$where);
+    // $where = "`memberAccount`=".$memberAccount;
+    // echo $where."<br>";
+    // $memberId = $data -> selectLastAdd('`memberId`','`MemberAccount`',$where);
 	// $rtn = '{"result" : true,"errorCode":'.$memberId.'}';
-	// exit();
+
+
+
+
+	
 	//web測試
 
 	if($inputJson=="") {
@@ -102,6 +96,7 @@
 		$dbcolumns = '`memberId`,`deviceType`,`deviceToken`';
 		// $deviceType = '1';	1.iOS	2.Android	3.other...
 		// $deviceToken = "'aaa-bbb-ccc'";
+
 		$dbValus = "$memberId,$deviceType,'$deviceToken'";
 		$arr = $data -> insertAndReportId($table,$dbcolumns,$dbValus);
 		$deviceTokenId = $arr['LAST_INSERT_ID()'];
@@ -131,16 +126,24 @@
     	if ($memberTel == null) {
     		$memberTel = "none";
     	}
+    	include "./includes/PeopleInformation.php";
+    	// print_r($peopleInfo);
 
-		$rtn = '{"result" : '.$checkAccount.',
-		"memberId":'.$memberId.',
-		"deviceToken":'.$deviceTokenId.',
-		"memberType":'.$memberType.',
-		"nickName":"'.$nickName.'",
-		"photo":"'.$photo.'",
-		"memberTel":"'.$memberTel.'",
-		"memberMail":"'.$memberMail.'"}';
+
+    	include "./includes/memberInfo.php";
+
+		$rtn = '{ "result" : "'.$checkAccount.'" ,
+		"memberId" : "'.$memberId.'" ,
+		"deviceToken" : "'.$deviceTokenId.'" ,
+		"memberType" : "'.$memberType.'" ,
+		"nickName" : "'.$nickName.'" ,
+		"photo" : "'.$photo.'" ,
+		"memberTel" : "'.$memberTel.'" ,
+		"memberMail" : "'.$memberMail.'" ,
+		"memberInfo" : '.$memberInfo.' ,
+		"peopleInfo" : '.$peopleInfo.' }';
 	} else {
+
 
 		if ($memberId == "0" || $memberId == "") {
 
@@ -165,6 +168,7 @@
 		$dbValus = "$memberId,$type";
 		$arr = $data -> insertAndReportId($table,$dbcolumns,$dbValus);
 		$MemberType = $arr['LAST_INSERT_ID()'];
+		$memberType = $data -> getList('`memberType`','MemberType','`id` = '.$MemberType)[0][0];
 
 		$table = 'MemberAccount';
 		$dbcolumns = '`memberId`,`memberSingInType`,`memberAccount`';
@@ -202,6 +206,20 @@
 		$arr = $data -> insertAndReportId($table,$dbcolumns,$dbValus);
 		$MemberMail = $arr['LAST_INSERT_ID()'];
 
+		$table = 'GroupMember';
+		$dbcolumns = '`memberId`,`groupListId`';
+		// $nickName = 'Masqurin';
+		$dbValus = "$memberId,'1'";
+		$arr = $data -> insertAndReportId($table,$dbcolumns,$dbValus);
+		$groupListId = $arr['LAST_INSERT_ID()'];
+
+		$table = 'GroupAuthority';
+		$dbcolumns = '`memberId`,`authority`,`groupId`';
+		// $nickName = 'Masqurin';
+		$dbValus = "$memberId,'1','1'";
+		$arr = $data -> insertAndReportId($table,$dbcolumns,$dbValus);
+		$GroupAuthority = $arr['LAST_INSERT_ID()'];
+
 		$result = 'true';
 		if ($memberId != "") {
 			
@@ -219,22 +237,35 @@
 			
 		} elseif ($MemberPhoto != "") {
 			
+		} elseif ($groupListId != "") {
+			
+		} elseif ($GroupAuthority != "") {
+			
 		} else {
 			$result = 'false';
 		}
 
-		$rtn = '{"result" : '.$result.', 
-		"memberId" : '.$memberId.',
-		"deviceTokenId" : '.$deviceTokenId.',
-		"MemberAccountId" : '.$MemberAccount.',
-		"MemberNicknameId" : '.$MemberNickname.',
-		"MemberPasswordId" : '.$MemberPassword.',
-		"MemberPhotoId" : '.$MemberPhoto.', 
-		"MemberMail" : '.$MemberMail.',
-		"memberTypeId" : '.$MemberType.'}';
+		include "./includes/PeopleInformation.php";
+
+    	include "./includes/memberInfo.php";
+
+		$rtn = '{"result" : "'.$result.'" , 
+		"memberId" : "'.$memberId.'" ,
+		"deviceTokenId" : "'.$deviceTokenId.'" ,
+		"MemberAccountId" : "'.$MemberAccount.'" ,
+		"MemberNicknameId" : "'.$MemberNickname.'" ,
+		"MemberPasswordId" : "'.$MemberPassword.'" ,
+		"MemberPhotoId" : "'.$MemberPhoto.'" , 
+		"MemberMail" : "'.$MemberMail.'" ,
+		"memberTypeId" : "'.$MemberType.'" ,
+		"memberType" : "'.$memberType.'" ,
+		"joinGroupOrder" : "'.$groupListId.'" ,
+		"GroupAuthorityOrder" : "'.$GroupAuthority.'" ,
+		"memberInfo" : '.$memberInfo.' ,
+		"peopleInfo" : '.$peopleInfo.' }';
 		
 	}
-	echo $rtn;
+	echo $rtn ;
 
 
 

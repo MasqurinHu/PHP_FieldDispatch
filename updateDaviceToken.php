@@ -36,7 +36,12 @@
 		//注意 values非數字的變數都要加'' EX '$deviceToken'
 		$arr = $data -> insertAndReportId($table,$dbcolumns,$dbValus);
 		$deviceTokenId = $arr['LAST_INSERT_ID()'];
-		$rtn = '{"result" : true, "deviceTokenId" : '.$deviceTokenId.'}';
+
+		include "./includes/PeopleInformation.php";
+
+		$rtn = '{"result" : true,
+		 "deviceTokenId" : '.$deviceTokenId.',
+		 "peopleInfo" : '.$peopleInfo.'}';
 	}
 	echo $rtn;
  ?>

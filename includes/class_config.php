@@ -1,6 +1,6 @@
 <?php 
 $dbhost 	= "localhost";
-$dbuser 	= "id2385028_masqurin";
-$dbpasswd 	= "belldandy";
-$dbname 	= "id2385028_fielddispatch";
+$dbuser 	= "FieldDispatch";
+$dbpasswd 	= "1234";
+$dbname 	= "FieldDispatch";
 ?>
