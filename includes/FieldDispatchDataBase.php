@@ -6,6 +6,18 @@ class dbData{
 
 		var $count = 0;
 
+		function autoCommitClose () {
+			$this -> db -> query ("SET AUTOCOMMIT = 0");
+		}
+
+		function autoCommitOpen () {
+			$this -> db -> query ("SET AUTOCOMMIT = 1");
+		}
+
+		function rollback () {
+			$this -> db -> query ("rollback");
+		}
+
 		function insert($datasheet,$dbcolumns = "",$dbValus = ""){
 
 			// echo '{"insert" : "insert into '.$datasheet.'('.$dbcolumns.') values('.$dbValus.')"}';
@@ -33,6 +45,18 @@ class dbData{
 			$this -> db -> query("update $table set $column $where");
 
 			// echo '{"getUpdata" : "update '.$table.' set '.$column.' '.$where.'"}';
+			// exit();
+		}
+
+		function prepareUpdate ($table,$column,$arr,$where = "") {
+
+			if ($where != "") {
+				$where = "where ".$where;
+			}
+
+			$this -> db -> prepare("update $table set $column $where") -> execute($arr);
+
+			// echo '{"prepareUpdate" : "update '.$table.' set '.$column.' '.$where.'" ,"arr = " : '.json_encode($arr).'}';
 			// exit();
 		}
 
@@ -166,7 +190,7 @@ class dbData{
 			//pdo sql類別
 			$this-> db = new pdo("mysql: host = $dbhost; port = 3306","$dbuser","$dbpasswd");
 			$this-> db-> query("set names 'utf8'");
-			$this-> db-> query("set GLOBAL time_zone = '+08:00'");
+			// $this-> db-> query("set GLOBAL time_zone = '+08:00'");
 			$this-> db-> query("use `$dbname`");
 		}
 	}

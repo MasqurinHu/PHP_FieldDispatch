@@ -1,6 +1,6 @@
 <?php 
 	//$inputJson = urldecode(file_get_contents("php://input"));
-
+	ini_set('date.timezone','Asia/Taipei');
     	
 
 	$inputJson = $_POST['FieldDispatch'];
@@ -29,13 +29,14 @@
 	$photo = $inputArray['photo'];
 
 	//即時回報資訊
-	$lat = $inputArray['lat'];
-	$lon = $inputArray['lon'];
+	$lat = $inputArray['Lat'];
+	$lon = $inputArray['Lon'];
 	$memberStatus = $inputArray['memberStatus'];
 	
 	//建立任務資料
 	$createMission = $inputArray['createMission'];
-
+	//接受任務資料
+	$acceptMission = $inputArray['acceptMission'];
 
 
     

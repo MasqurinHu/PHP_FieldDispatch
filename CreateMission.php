@@ -12,13 +12,14 @@ if (!$createMission) {
 $groupId = $createMission['groupId'];
 $createMemberid = $createMission['createMemberid'];
 $missionName = $createMission['missionName'];
-$missionTel = $createMission['missionTel'];
+$contactPerson = $createMission['contactPerson'];
+$contactPersonTel = $createMission['missionTel'];
 //執行者出發點 不檢查
-$missionAddress = $createMission['missionAddress'];
+$bookingAddress = $createMission['missionAddress'];
 //不檢查
-$missionLat = $createMission['missionLat'];
+$bookingLat = $createMission['missionLat'];
 //不檢查
-$missionLon = $createMission['missionLon'];
+$bookingLon = $createMission['missionLon'];
 $missionMemo = $createMission['missionMemo'];
 $missionWorkPoint = $createMission['missionWorkPoint'];
 
@@ -27,9 +28,11 @@ if ($groupId == "") {
 } elseif ($createMemberid == "") {
 	$rtn = '{"result" : false, "errorCode" : "CM_NO_CREATE_MEMBER_ID"}';
 } elseif ($missionName == "") {
-	$rtn = '{"result" : false, "errorCode" : "CM_NO_MISSION_NAME_ID"}';
-} elseif ($missionTel == "") {
-	$rtn = '{"result" : false, "errorCode" : "CM_NO_MISSION_TEL_ID"}';
+	$rtn = '{"result" : false, "errorCode" : "CM_NO_MISSION_NAME"}';
+} elseif ($contactPerson == "") {
+	$rtn = '{"result" : false, "errorCode" : "CM_NO_CONTACT_PERSON"}';
+} elseif ($contactPersonTel == "") {
+	$rtn = '{"result" : false, "errorCode" : "CM_NO_CONTACT_PERSON_TEL"}';
 } elseif ($missionMemo == "") {
 	$rtn = '{"result" : false, "errorCode" : "CM_NO_MISSION_MEMO_ID"}';
 } elseif ($missionWorkPoint == "") {
@@ -39,8 +42,13 @@ if ($groupId == "") {
 } else {
 
 	$missionId = $data -> insertAndReportId('`Mission`',
-		"`groupId`,`creatMemberId`,`missionName`,`missionTel`,`missionAddress`,`missionLat`,`missionLon`,`missionMemo`",
-		"'$groupId','$createMemberid','$missionName','$missionTel','$missionAddress','$missionLat','$missionLon','$missionMemo'");
+		"`groupId`,`creatMemberId`,`missionName`,`contactPerson`,`contactPersonTel`,`bookingAddress`,`bookingLat`,`bookingLon`,`missionMemo`",
+		"'$groupId','$createMemberid','$missionName','$contactPerson','$contactPersonTel','$bookingAddress','$bookingLat','$bookingLon','$missionMemo'");
+
+	if ($missionId['LAST_INSERT_ID()'] == 0) {
+		echo '{"result" : false, "errorCode" : "CM_NO_INSERT_MISSION"}';
+		exit();
+	}
 
 	for ($i = 0; $i < count($missionWorkPoint); $i++) {
 

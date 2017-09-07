@@ -31,21 +31,25 @@
 					$mission['groupId'] = $data -> get('`groupId`','`Mission`','`id` = '.$missionIdList[$i][0]);
 					//任務建立者
 					$mission['creatMemberId'] = $data -> get('`creatMemberId`','`Mission`','`id` = '.$missionIdList[$i][0]);
+					//執行者id
+					$mission['executorId'] = $data -> get('`executorId`','`Mission`','`id` = '.$missionIdList[$i][0]);
 					//任務名稱
 					$mission['missionName'] = $data -> get('`missionName`','`Mission`','`id` = '.$missionIdList[$i][0]);
-					//任務電話
-					$mission['missionTel'] = $data -> get('`missionTel`','`Mission`','`id` = '.$missionIdList[$i][0]);
+					//聯絡人
+					$mission['contactPerson'] = $data -> get('`contactPerson`','`Mission`','`id` = '.$missionIdList[$i][0]);
+					//聯絡人電話
+					$mission['contactPersonTel'] = $data -> get('`contactPersonTel`','`Mission`','`id` = '.$missionIdList[$i][0]);
 					//任務接受者任務接受位置
-					$mission['missionAddress'] = $data -> get('`missionAddress`','`Mission`','`id` = '.$missionIdList[$i][0]);
+					$mission['bookingAddress'] = $data -> get('`bookingAddress`','`Mission`','`id` = '.$missionIdList[$i][0]);
 					//任務接受者任務接受位置
-					$mission['missionLat'] = $data -> get('`missionLat`','`Mission`','`id` = '.$missionIdList[$i][0]);
+					$mission['bookingLat'] = $data -> get('`bookingLat`','`Mission`','`id` = '.$missionIdList[$i][0]);
 					//任務接受者任務接受位置
-					$mission['missionLon'] = $data -> get('`missionLon`','`Mission`','`id` = '.$missionIdList[$i][0]);
+					$mission['bookingLon'] = $data -> get('`bookingLon`','`Mission`','`id` = '.$missionIdList[$i][0]);
 					//任務其他資訊
 					$mission['missionMemo'] = $data -> get('`missionMemo`','`Mission`','`id` = '.$missionIdList[$i][0]);
 					//任務建立時間
 					$mission['createTime'] = $data -> get('`createTime`','`Mission`','`id` = '.$missionIdList[$i][0]);
-					//任務工作點資訊
+					//任務工作點資訊z
 					$mission["workPointInfo"] = $this -> getMissionInfoFromMissionId($missionIdList[$i][0],$data);
 					
 					$missionInfo[$i] = $mission;

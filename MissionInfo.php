@@ -22,8 +22,12 @@
 	$missionInfo["missionDelegate"] = $func -> getMissioninfo($data,$missionIdList);
 
 	// 取得可接受任務清單 
-	$missionIdList = $data -> selcetList('`id`','`Mission`','');
+	$missionIdList = $data -> selcetListNoStatus('`id`','`Mission`',"`status` = '1'");
 	$missionInfo["missionAcceptableList"] = $func -> getMissioninfo($data,$missionIdList);
+
+	// 取得已接受任務清單 
+	$missionIdList = $data -> selcetListNoStatus('`id`','`Mission`',"`status` = '2' and `executorId` = '".$memberId."'");
+	$missionInfo["missionAcceptedList"] = $func -> getMissioninfo($data,$missionIdList);
 
 	//取得已完成任務清單
 	$missionIdList = $data -> selcetListNoStatus('`id`','`Mission`','`status` = -1 and `creatMemberId` = '.$memberId);
